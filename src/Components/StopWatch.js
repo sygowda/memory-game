@@ -9,7 +9,7 @@ const Stopwatch = () => (
     onCallback={() => console.log('Finish')}
     render={({ formatted, hours, minutes, seconds }) => {
       return (
-        <div>
+        <div className = "stop">
             { hours } : { minutes } : { seconds }
         </div>
       );

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import StopWatch from '../Components/StopWatch';
 import Card from 'react-bootstrap/Card';
 import CardDeck from 'react-bootstrap/Card';
+import '../Styles/Structure.css'
 
 class Structure extends React.Component{
 
@@ -26,14 +26,23 @@ class Structure extends React.Component{
         let row = this.props.row;
 
         let total = col* row;
-        
-        
         let images_total = total/2;
+        
+        let arr = Array.from(Array(total).keys());
 
         return(
-            <React.Fragment>
-                <StopWatch />
-            </React.Fragment>    
+            <div className="grid">
+                {arr
+                    .sort(() => Math.random()-0.5)
+                    .map((element) => {
+                        return (
+                            <Card className = "tile" style={{width: window.innerWidth/col}}>
+                                <Card.Title>{element}</Card.Title>
+                            </Card>
+                        );
+                    })
+                }
+            </div>
         )
     }
 

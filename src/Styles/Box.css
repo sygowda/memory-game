@@ -1,0 +1,13 @@
+.top{
+    width:100%;
+}
+.row{
+    text-align: left;
+    margin: 2%;
+    height: 2%;
+    float:inline-end;
+}
+.col{
+    width : 33.33%;
+    float:left;
+}
