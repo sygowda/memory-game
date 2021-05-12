@@ -27,16 +27,25 @@ class Structure extends React.Component{
 
         let total = col* row;
         let images_total = total/2;
+        let w = window.innerWidth/2;
         
-        let arr = Array.from(Array(total).keys());
+        var arr = new Array(total)
+        var suit = ['H', 'D', 'S', 'C'];
+        var v = ['1','2','3','4','5','6','7','8','9','10','11','12','13'];
 
+        for(let i=0; i<total ; i=i+2){
+            let t1 = Math.floor(Math.random() * (4));
+            let t2 = Math.floor(Math.random() * (13));
+            console.log(t1,t2);
+            arr[i] = suit[t1] + v[t2]; arr[i+1] = suit[t1] + v[t2];
+        }
         return(
             <div className="grid">
                 {arr
                     .sort(() => Math.random()-0.5)
                     .map((element) => {
                         return (
-                            <Card className = "tile" style={{width: window.innerWidth/col}}>
+                            <Card className = "tile blank" style={{width: w/col}}>
                                 <Card.Title>{element}</Card.Title>
                             </Card>
                         );
