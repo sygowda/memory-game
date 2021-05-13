@@ -1,7 +1,10 @@
 import React from "react";
-import Flippy, { FrontSide, BackSide } from "react-flippy";
 import "../Styles/Structure.css";
+import Result from '../Components/Result';
+import Card from '@material-ui/core/Card';
 const temp = true;
+
+
 class Structure extends React.Component {
   constructor(props) {
     super(props);
@@ -38,6 +41,8 @@ class Structure extends React.Component {
       successfulCards: [],
       lastSelectedCard: "",
       arr: arr,
+      totalFlips : 0,
+      successfulFlips: 0,
       w: window.innerWidth / 2,
       h: window.innerHeight / 2,
       row: props.row,
@@ -73,77 +78,101 @@ class Structure extends React.Component {
   };
 
   cardClicked = (element, index) => {
+    
     if (this.state.lastSelectedCard === "") {
       let copy = [...this.state.isCardFlippedArr];
       copy[index] = false;
       this.setState({
         lastSelectedCard: element + "/" + index,
-        isCardFlippedArr: copy
+        isCardFlippedArr: copy,
+        totalFlips: this.state.totalFlips+1
       });
     } else if (this.state.lastSelectedCard.split("/")[0] === element) {
-      console.log("HERE");
       let isflipOnClickEnabledCopy = [...this.state.isflipOnClickEnabled];
       let isCardFlippedArrCopy = [...this.state.isCardFlippedArr];
+      let successfulCardsCopy = [...this.state.successfulCards];
       isflipOnClickEnabledCopy[index] = false;
       isCardFlippedArrCopy[index] = false;
       let previousElementIndex = this.state.lastSelectedCard.split("/")[1];
       isflipOnClickEnabledCopy[previousElementIndex] = false;
       isCardFlippedArrCopy[previousElementIndex] = false;
+      successfulCardsCopy.push(parseInt(previousElementIndex), index);
       this.setState({
         isflipOnClickEnabled: isflipOnClickEnabledCopy,
         isCardFlippedArr: isCardFlippedArrCopy,
-        lastSelectedCard: ""
+        lastSelectedCard: "",
+        successfulCards: successfulCardsCopy,
+        totalFlips: this.state.totalFlips + 1,
+        successfulFlips: this.state.successfulFlips + 1
       });
     } else {
-      console.log("EKLSE");
       let isCardFlippedArrCopy = [...this.state.isCardFlippedArr];
       // console.log(isCardFlippedArrCopy0
       isCardFlippedArrCopy[index] = true;
-
       let previousElementIndex = this.state.lastSelectedCard.split("/")[1];
       console.log(previousElementIndex);
       isCardFlippedArrCopy[previousElementIndex] = true;
       // console.log(isCardFlippedArrCopy);
       this.setState({
         lastSelectedCard: "",
-        isCardFlippedArr: isCardFlippedArrCopy
+        isCardFlippedArr: isCardFlippedArrCopy,
+        totalFlips: this.state.totalFlips + 1
+
       });
     }
   };
 
   render() {
+    if(this.state.successfulCards.length === (this.state.row*this.state.col)){
+      return(
+        <Result total = {this.state.totalFlips/2} success = {this.state.successfulFlips}/>
+      )
+    }
     return (
       <div className="grid">
-        {this.state.arr.map((element, i) => {
-          return (
-            <Flippy
-              key={i}
-              onClick={() => this.cardClicked(element, i)}
-              flipOnHover={false} // default false
-              flipOnClick={this.state.isflipOnClickEnabled[i]} // default false
-              isFlipped={this.state.isCardFlippedArr[i]}
-              flipDirection="horizontal" // horizontal or vertical
-              ref={(r) => (this.flippy = r)} // to use toggle method like this.flippy.toggle()
-              // if you pass isFlipped prop component will be controlled component.
-              // and other props, which will go to div
-              style={{
-                width: this.state.w / this.state.col - 30,
-                float: "left",
-                margin: "1%",
-                height: this.state.h / this.state.row - 30
-              }} /// these are optional style, it is not necessary
-            >
-              <FrontSide
-                style={{
-                  backgroundColor: "#41669d"
-                }}
-              ></FrontSide>
-              <BackSide style={{ backgroundColor: "#175852" }}>
-                {element}
-              </BackSide>
-            </Flippy>
-          );
-        })}
+
+        {
+            
+            this.state.arr.map((element, i) => {
+              var dis = "";
+              if(this.state.isCardFlippedArr[i]){
+                  return (
+                    <Card onClick={() => this.cardClicked(element, i)}
+                      style={{
+                        width: this.state.w / this.state.col - 30,
+                        float: "left",
+                        margin: "1%",
+                        height: this.state.h / this.state.row - 30, 
+                        display: dis
+                      }}
+                    >
+                      {element}
+                    </Card>
+                  
+                  )
+                }
+              else{
+                if (this.state.successfulCards.includes(i)){
+                  console.log("Display");
+                  dis = "None";
+                }
+                return (
+                  <Card onClick={() => this.cardClicked(element, i)}
+                    style={{
+                      width: this.state.w / this.state.col - 30,
+                      float: "left",
+                      margin: "1%",
+                      backgroundColor: "blue",
+                      height: this.state.h / this.state.row - 30,
+                      display: dis
+                    }}
+                  >
+                    {element}
+                  </Card>)
+              }
+         }
+            )
+        }
       </div>
     );
   }
