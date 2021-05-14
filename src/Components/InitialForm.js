@@ -1,5 +1,5 @@
 import Box from './Box.js';
-import React, {useRef} from 'react';
+import React from 'react';
 import '../Styles/InitialForm.css';
 
 
@@ -22,7 +22,7 @@ class InitialForm extends React.Component{
 
     handleSubmit = () => {
         let total = this.state.row * this.state.col;
-        if (total % 2 == 0){
+        if (total % 2 === 0){
             this.setState({loader: true});
         }
         else

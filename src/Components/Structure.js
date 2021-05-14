@@ -2,8 +2,7 @@ import React from "react";
 import "../Styles/Structure.css";
 import Result from '../Components/Result';
 import Card from '@material-ui/core/Card';
-const temp = true;
-
+import { Button, CardMedia } from "@material-ui/core";
 
 class Structure extends React.Component {
   constructor(props) {
@@ -12,7 +11,7 @@ class Structure extends React.Component {
     var arr = new Array(total);
     var suit = ["H", "D", "S", "C"];
     var v = [
-      "1",
+      "A",
       "2",
       "3",
       "4",
@@ -21,16 +20,20 @@ class Structure extends React.Component {
       "7",
       "8",
       "9",
-      "10",
-      "11",
-      "12",
-      "13"
+      "0",
+      "J",
+      "K",
+      "Q"
     ];
-    for (let i = 0; i < total; i = i + 2) {
+    let i = 0;
+    while (i < total){
       let t1 = Math.floor(Math.random() * 4);
       let t2 = Math.floor(Math.random() * 13);
-      arr[i] = suit[t1] + v[t2];
-      arr[i + 1] = suit[t1] + v[t2];
+      if (!arr.includes(v[t2] + suit[t1])){
+        arr[i] = v[t2] + suit[t1];
+        arr[i + 1] = v[t2] + suit[t1];
+        i = i + 2;
+      }
     }
     arr = this.shuffle(arr);
     this.state = {
@@ -43,6 +46,7 @@ class Structure extends React.Component {
       arr: arr,
       totalFlips : 0,
       successfulFlips: 0,
+      hintUse: 3,
       w: window.innerWidth / 2,
       h: window.innerHeight / 2,
       row: props.row,
@@ -76,6 +80,23 @@ class Structure extends React.Component {
       col: this.props.col
     });
   };
+
+  handleClick = () => {
+    let hintUseCopy = this.state.hintUse;
+    if (hintUseCopy > 0){
+        let isCardFlippedArrCopy = this.state.isCardFlippedArr;
+        let temp = new Array(this.state.row * this.state.col).fill().map(() => false);
+        this.setState({
+          isCardFlippedArr: temp,
+          hintUse: hintUseCopy - 1
+
+        })
+        setTimeout(() => {
+          this.setState({
+            isCardFlippedArr: isCardFlippedArrCopy
+          });}, 1000);
+    }
+  }
 
   cardClicked = (element, index) => {
     
@@ -117,7 +138,6 @@ class Structure extends React.Component {
         lastSelectedCard: "",
         isCardFlippedArr: isCardFlippedArrCopy,
         totalFlips: this.state.totalFlips + 1
-
       });
     }
   };
@@ -129,50 +149,58 @@ class Structure extends React.Component {
       )
     }
     return (
-      <div className="grid">
-
+      <div>
+        <Button variant = 'contained' color = 'primary' onClick = {() => {this.handleClick()}}> Hint </Button>
+        <h3> Hints available : {this.state.hintUse}</h3>
+        <div className = "grid" style = {{
+            width : this.state.w,
+            height : this.state.h
+        }}>
         {
             
             this.state.arr.map((element, i) => {
               var dis = "";
+              var img_link = "https://deckofcardsapi.com/static/img/"+element+".png";
               if(this.state.isCardFlippedArr[i]){
                   return (
                     <Card onClick={() => this.cardClicked(element, i)}
                       style={{
-                        width: this.state.w / this.state.col - 30,
+                        width:  this.state.w / this.state.col - 30,
                         float: "left",
                         margin: "1%",
-                        height: this.state.h / this.state.row - 30, 
+                        height:  this.state.h / this.state.col - 30 , 
                         display: dis
                       }}
                     >
-                      {element}
                     </Card>
                   
                   )
                 }
               else{
-                if (this.state.successfulCards.includes(i)){
-                  console.log("Display");
-                  dis = "None";
-                }
+                // if (this.state.successfulCards.includes(i)){
+                //   console.log("Display");
+                //   dis = "None";
+                // }
+                console.log("Flip");
                 return (
-                  <Card onClick={() => this.cardClicked(element, i)}
+                  <Card 
                     style={{
-                      width: this.state.w / this.state.col - 30,
+                      width:  this.state.w / this.state.col - 30,
                       float: "left",
-                      margin: "1%",
-                      backgroundColor: "blue",
-                      height: this.state.h / this.state.row - 30,
-                      display: dis
+                      margin: "1%",  
+                      height:  this.state.h / this.state.col - 30                   
                     }}
                   >
-                    {element}
+                    <CardMedia 
+                      image = {img_link}
+                      className = 'card-image'
+                      />
                   </Card>)
               }
          }
             )
         }
+        </div>
       </div>
     );
   }

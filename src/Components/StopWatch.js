@@ -6,8 +6,7 @@ const Stopwatch = () => (
     seconds={0}
     minutes={0}
     hours={0}
-    onCallback={() => console.log('Finish')}
-    render={({ formatted, hours, minutes, seconds }) => {
+    render={({  hours, minutes, seconds }) => {
       return (
         <div className = "stop">
             { hours } : { minutes } : { seconds }
