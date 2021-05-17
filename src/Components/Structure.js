@@ -4,7 +4,6 @@ import Result from "../Components/Result";
 import Card from "@material-ui/core/Card";
 import { Button, CardMedia } from "@material-ui/core";
 import Timer from "react-compound-timer/build";
-import StopWatch from "../Components/StopWatch";
 
 class Structure extends React.Component {
   constructor(props) {
@@ -30,6 +29,24 @@ class Structure extends React.Component {
     } else {
       dim_a = 50 * props.col;
     }
+    this.initialState = {
+      isCardFlippedArr: new Array(props.row * props.col)
+        .fill()
+        .map(() => false),
+      isflipOnClickEnabled: new Array(props.row * props.col)
+        .fill()
+        .map(() => true),
+      successfulCards: [],
+      lastSelectedCard: "",
+      arr: arr,
+      totalFlips: 0,
+      successfulFlips: 0,
+      hintUse: 3,
+      w: dim_a,
+      row: props.row,
+      col: props.col,
+      randomValue: Math.random() - 0.5
+    };
     this.state = {
       isCardFlippedArr: new Array(props.row * props.col)
         .fill()
@@ -96,7 +113,9 @@ class Structure extends React.Component {
   };
 
   handleRecreate = () => {
-    this.render();
+    let reshuffledArr = this.shuffle(this.initialState.arr);
+    this.initialState.arr = reshuffledArr;
+    this.setState(this.initialState);
   };
 
   cardClicked = (element, index) => {
@@ -175,7 +194,7 @@ class Structure extends React.Component {
           variant="contained"
           color="primary"
           onClick={() => {
-            alert("refresh");
+            // alert("refresh");
             this.handleRecreate();
           }}
         >
@@ -187,10 +206,11 @@ class Structure extends React.Component {
           <Timer.Minutes /> :
           <Timer.Seconds />
         </Timer>
+
         <div
           className="grid"
           style={{
-            width: this.state.w
+            width: this.state.wc
           }}
         >
           {this.state.arr.map((element, i) => {
