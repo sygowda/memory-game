@@ -4,6 +4,7 @@ import Result from "../Components/Result";
 import Card from "@material-ui/core/Card";
 import { Button, CardMedia } from "@material-ui/core";
 import Timer from "react-compound-timer/build";
+import StopWatch from "../Components/StopWatch";
 
 class Structure extends React.Component {
   constructor(props) {
