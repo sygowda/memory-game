@@ -210,7 +210,8 @@ class Structure extends React.Component {
         <div
           className="grid"
           style={{
-            width: this.state.wc
+            height: this.state.row * 50,
+            width: this.state.col * 50
           }}
         >
           {this.state.arr.map((element, i) => {
