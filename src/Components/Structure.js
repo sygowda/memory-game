@@ -187,6 +187,9 @@ class Structure extends React.Component {
           onClick={() => {
             this.handleClick();
           }}
+          style={{
+            marginRight: "5%"
+          }}
         >
           Peek
         </Button>
