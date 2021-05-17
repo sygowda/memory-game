@@ -249,8 +249,8 @@ class Structure extends React.Component {
         <div
           className="grid"
           style={{
-            height: this.state.row * 50,
-            width: this.state.col * 50
+            height: this.state.row * 120,
+            width: this.state.col * 70
           }}
         >
           {this.state.arr.map((element, i) => {
@@ -264,7 +264,7 @@ class Structure extends React.Component {
                   style={{
                     width: 40,
                     float: "left",
-                    margin: "1%",
+                    margin: "15px",
                     height: 90,
                     display: dis
                   }}
@@ -282,8 +282,7 @@ class Structure extends React.Component {
                       width: 40,
                       float: "left",
                       margin: "1%",
-                      height: 90,
-                      backgroundColor: element
+                      height: 90
                     }}
                   >
                     <CardMedia image={img_link} className="card-image" />
