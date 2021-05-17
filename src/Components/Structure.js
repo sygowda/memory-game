@@ -281,7 +281,7 @@ class Structure extends React.Component {
                     style={{
                       width: 40,
                       float: "left",
-                      margin: "1%",
+                      margin: "15px",
                       height: 90
                     }}
                   >
@@ -294,7 +294,7 @@ class Structure extends React.Component {
                     style={{
                       width: 40,
                       float: "left",
-                      margin: "1%",
+                      margin: "15px",
                       height: 90,
                       backgroundColor: element
                     }}
