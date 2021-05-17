@@ -19,15 +19,49 @@ class Structure extends React.Component {
     let total = props.col * props.row;
     var arr = new Array(total);
     var suit = ["H", "D", "S", "C"];
-    var v = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "0", "J", "K", "Q"];
+    var vc = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "0", "J", "K", "Q"];
+    var v = [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9",
+      "0",
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F"
+    ];
     let i = 0;
-    while (i < total) {
-      let t1 = Math.floor(Math.random() * 4);
-      let t2 = Math.floor(Math.random() * 13);
-      if (!arr.includes(v[t2] + suit[t1])) {
-        arr[i] = v[t2] + suit[t1];
-        arr[i + 1] = v[t2] + suit[t1];
-        i = i + 2;
+    if (total < 104) {
+      while (i < total) {
+        let t1 = Math.floor(Math.random() * 4);
+        let t2 = Math.floor(Math.random() * 13);
+        if (!arr.includes(v[t2] + suit[t1])) {
+          arr[i] = vc[t2] + suit[t1];
+          arr[i + 1] = vc[t2] + suit[t1];
+          i = i + 2;
+        }
+      }
+    } else {
+      while (i < total) {
+        let op = "";
+        for (let j = 0; j < 6; j++) {
+          let t1 = Math.floor(Math.random() * 16);
+          op += v[t1];
+        }
+        if (!arr.includes(op)) {
+          op = "#" + op;
+          arr[i] = op;
+          arr[i + 1] = op;
+          i = i + 2;
+        }
       }
     }
     arr = this.shuffle(arr);
@@ -241,18 +275,35 @@ class Structure extends React.Component {
               //   console.log("Display");
               //   dis = "None";
               // }
-              return (
-                <Card
-                  style={{
-                    width: 40,
-                    float: "left",
-                    margin: "1%",
-                    height: 90
-                  }}
-                >
-                  <CardMedia image={img_link} className="card-image" />
-                </Card>
-              );
+              if (element.length === 2) {
+                return (
+                  <Card
+                    style={{
+                      width: 40,
+                      float: "left",
+                      margin: "1%",
+                      height: 90,
+                      backgroundColor: element
+                    }}
+                  >
+                    <CardMedia image={img_link} className="card-image" />
+                  </Card>
+                );
+              } else {
+                return (
+                  <Card
+                    style={{
+                      width: 40,
+                      float: "left",
+                      margin: "1%",
+                      height: 90,
+                      backgroundColor: element
+                    }}
+                  >
+                    {/* <CardMedia image={img_link} className="card-image" /> */}
+                  </Card>
+                );
+              }
             }
           })}
         </div>
