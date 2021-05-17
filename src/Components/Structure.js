@@ -3,6 +3,7 @@ import "../Styles/Structure.css";
 import Result from "../Components/Result";
 import Card from "@material-ui/core/Card";
 import { Button, CardMedia } from "@material-ui/core";
+import Timer from "react-compound-timer/build";
 
 class Structure extends React.Component {
   constructor(props) {
@@ -12,6 +13,7 @@ class Structure extends React.Component {
     var suit = ["H", "D", "S", "C"];
     var v = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "0", "J", "K", "Q"];
     let i = 0;
+    var dim_a = 0;
     while (i < total) {
       let t1 = Math.floor(Math.random() * 4);
       let t2 = Math.floor(Math.random() * 13);
@@ -22,6 +24,11 @@ class Structure extends React.Component {
       }
     }
     arr = this.shuffle(arr);
+    if (window.innerWidth / 2 < 50 * props.col) {
+      dim_a = window.innerWidth / 2;
+    } else {
+      dim_a = 50 * props.col;
+    }
     this.state = {
       isCardFlippedArr: new Array(props.row * props.col)
         .fill()
@@ -35,8 +42,7 @@ class Structure extends React.Component {
       totalFlips: 0,
       successfulFlips: 0,
       hintUse: 3,
-      w: window.innerWidth / 2,
-      h: window.innerHeight / 2,
+      w: dim_a,
       row: props.row,
       col: props.col,
       randomValue: Math.random() - 0.5
@@ -88,6 +94,10 @@ class Structure extends React.Component {
     }
   };
 
+  handleRecreate = () => {
+    this.render();
+  };
+
   cardClicked = (element, index) => {
     if (this.state.lastSelectedCard === "") {
       let copy = [...this.state.isCardFlippedArr];
@@ -135,7 +145,7 @@ class Structure extends React.Component {
           isCardFlippedArr: isCardFlippedArrCopy,
           totalFlips: this.state.totalFlips + 1
         });
-      }, 1000);
+      }, 500);
     }
   };
 
@@ -157,15 +167,29 @@ class Structure extends React.Component {
             this.handleClick();
           }}
         >
-          {" "}
-          Hint{" "}
+          Peek
+        </Button>
+
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => {
+            alert("refresh");
+            this.handleRecreate();
+          }}
+        >
+          Recreate
         </Button>
         <h3> Hints available : {this.state.hintUse}</h3>
+        <Timer>
+          <Timer.Hours /> :
+          <Timer.Minutes /> :
+          <Timer.Seconds />
+        </Timer>
         <div
           className="grid"
           style={{
-            width: this.state.w,
-            height: this.state.h
+            width: this.state.w
           }}
         >
           {this.state.arr.map((element, i) => {
@@ -177,10 +201,10 @@ class Structure extends React.Component {
                 <Card
                   onClick={() => this.cardClicked(element, i)}
                   style={{
-                    width: this.state.w / this.state.col - 30,
+                    width: 40,
                     float: "left",
                     margin: "1%",
-                    height: this.state.h / this.state.col - 30,
+                    height: 90,
                     display: dis
                   }}
                 ></Card>
@@ -193,10 +217,10 @@ class Structure extends React.Component {
               return (
                 <Card
                   style={{
-                    width: this.state.w / this.state.col - 30,
+                    width: 40,
                     float: "left",
                     margin: "1%",
-                    height: this.state.h / this.state.col - 30
+                    height: 90
                   }}
                 >
                   <CardMedia image={img_link} className="card-image" />

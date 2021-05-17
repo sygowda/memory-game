@@ -1,23 +1,25 @@
-.tile{
-    float:left;
-    height: 120px;
-    width: 120px;
+.tile {
+  float: left;
+  height: 120px;
+  width: 120px;
 }
 
-.blank{
-    color: black;
-    float:left;
+.blank {
+  color: black;
+  float: left;
 }
 
-.grid{
-    position: fixed;
-    top: 50%;
-    left:50%;
-    transform: translate(-50%, -50%);
+.grid {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: auto;
+  width: auto;
 }
 
-
-.card-image{
-    width: 50%;
-    height: 50%;
+.card-image {
+  width: 160%;
+  height: 100%;
+  object-fit: fill;
 }
