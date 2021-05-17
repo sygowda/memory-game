@@ -5,30 +5,84 @@ import Card from "@material-ui/core/Card";
 import { Button, CardMedia } from "@material-ui/core";
 import Timer from "react-compound-timer/build";
 
+const newLocal = (
+  <Timer>
+    <Timer.Hours />:
+    <Timer.Minutes />:
+    <Timer.Seconds />
+  </Timer>
+);
+
 class Structure extends React.Component {
   constructor(props) {
     super(props);
     let total = props.col * props.row;
     var arr = new Array(total);
     var suit = ["H", "D", "S", "C"];
-    var v = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "0", "J", "K", "Q"];
+    var vc = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "0", "J", "K", "Q"];
+    var v = [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9",
+      "0",
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F"
+    ];
     let i = 0;
-    var dim_a = 0;
-    while (i < total) {
-      let t1 = Math.floor(Math.random() * 4);
-      let t2 = Math.floor(Math.random() * 13);
-      if (!arr.includes(v[t2] + suit[t1])) {
-        arr[i] = v[t2] + suit[t1];
-        arr[i + 1] = v[t2] + suit[t1];
-        i = i + 2;
+    if (total < 104) {
+      while (i < total) {
+        let t1 = Math.floor(Math.random() * 4);
+        let t2 = Math.floor(Math.random() * 13);
+        if (!arr.includes(v[t2] + suit[t1])) {
+          arr[i] = vc[t2] + suit[t1];
+          arr[i + 1] = vc[t2] + suit[t1];
+          i = i + 2;
+        }
+      }
+    } else {
+      while (i < total) {
+        let op = "";
+        for (let j = 0; j < 6; j++) {
+          let t1 = Math.floor(Math.random() * 16);
+          op += v[t1];
+        }
+        if (!arr.includes(op)) {
+          op = "#" + op;
+          arr[i] = op;
+          arr[i + 1] = op;
+          i = i + 2;
+        }
       }
     }
     arr = this.shuffle(arr);
-    if (window.innerWidth / 2 < 50 * props.col) {
-      dim_a = window.innerWidth / 2;
-    } else {
-      dim_a = 50 * props.col;
-    }
+    this.initialState = {
+      isCardFlippedArr: new Array(props.row * props.col)
+        .fill()
+        .map(() => false),
+      isflipOnClickEnabled: new Array(props.row * props.col)
+        .fill()
+        .map(() => true),
+      successfulCards: [],
+      lastSelectedCard: "",
+      arr: arr,
+      totalFlips: 0,
+      successfulFlips: 0,
+      hintUse: 3,
+      row: props.row,
+      col: props.col,
+      clock_reset: false,
+      randomValue: Math.random() - 0.5
+    };
     this.state = {
       isCardFlippedArr: new Array(props.row * props.col)
         .fill()
@@ -42,7 +96,6 @@ class Structure extends React.Component {
       totalFlips: 0,
       successfulFlips: 0,
       hintUse: 3,
-      w: dim_a,
       row: props.row,
       col: props.col,
       randomValue: Math.random() - 0.5
@@ -95,7 +148,9 @@ class Structure extends React.Component {
   };
 
   handleRecreate = () => {
-    this.render();
+    let reshuffledArr = this.shuffle(this.initialState.arr);
+    this.initialState.arr = reshuffledArr;
+    this.setState(this.initialState);
   };
 
   cardClicked = (element, index) => {
@@ -166,6 +221,9 @@ class Structure extends React.Component {
           onClick={() => {
             this.handleClick();
           }}
+          style={{
+            marginRight: "5%"
+          }}
         >
           Peek
         </Button>
@@ -174,22 +232,25 @@ class Structure extends React.Component {
           variant="contained"
           color="primary"
           onClick={() => {
-            alert("refresh");
+            // alert("refresh");
             this.handleRecreate();
           }}
         >
           Recreate
         </Button>
         <h3> Hints available : {this.state.hintUse}</h3>
-        <Timer>
-          <Timer.Hours /> :
-          <Timer.Minutes /> :
-          <Timer.Seconds />
-        </Timer>
+        <div
+          style={{
+            marginBottom: "1%"
+          }}
+        >
+          {newLocal}
+        </div>
         <div
           className="grid"
           style={{
-            width: this.state.w
+            height: this.state.row * 120,
+            width: this.state.col * 70
           }}
         >
           {this.state.arr.map((element, i) => {
@@ -203,7 +264,7 @@ class Structure extends React.Component {
                   style={{
                     width: 40,
                     float: "left",
-                    margin: "1%",
+                    margin: "15px",
                     height: 90,
                     display: dis
                   }}
@@ -214,18 +275,34 @@ class Structure extends React.Component {
               //   console.log("Display");
               //   dis = "None";
               // }
-              return (
-                <Card
-                  style={{
-                    width: 40,
-                    float: "left",
-                    margin: "1%",
-                    height: 90
-                  }}
-                >
-                  <CardMedia image={img_link} className="card-image" />
-                </Card>
-              );
+              if (element.length === 2) {
+                return (
+                  <Card
+                    style={{
+                      width: 40,
+                      float: "left",
+                      margin: "1%",
+                      height: 90
+                    }}
+                  >
+                    <CardMedia image={img_link} className="card-image" />
+                  </Card>
+                );
+              } else {
+                return (
+                  <Card
+                    style={{
+                      width: 40,
+                      float: "left",
+                      margin: "1%",
+                      height: 90,
+                      backgroundColor: element
+                    }}
+                  >
+                    {/* <CardMedia image={img_link} className="card-image" /> */}
+                  </Card>
+                );
+              }
             }
           })}
         </div>
